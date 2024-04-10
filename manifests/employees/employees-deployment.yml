@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employees-deployment
+  labels:
+    app: employees-app
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: employees-app
+    template:
+      metadata:
+        labels:
+          app: employees-app
+        spec:
+          containers:
+          - name: mysql
+            image: mysql:latest
+            resources:
+              requests:
+                memory: "256Mi"
+            env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: 273114@Pp
+            - name: MYSQL_DATABASE
+              value: employeesuser
+            - name: MYSQL_PASSWORD
+              value: 273114@Pp
+            ports:
+            - containerPort: 3306
+          - name: employees
+            image: nginx:latest
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "1"
+            env:
+            - name: EMPLOYEE_JAPAN_SERVICE
+              value: employees-japan-service
+            - name: DB_HOST
+              value: 127.0.0.1
+            - name: DB_PASSWORD
+              value: 273114@Pp
+          - name: nginx-employees
+            image: nginx:latest
+            resources:
+              requests:
+                memory: "32Mi"
+                cpu: "25m"
+              limits:
+                memory: "256Mi"
+                cpu: "1"
+            ports:
+            - containerPort: 80

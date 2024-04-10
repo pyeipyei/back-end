@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-deployment
+  labels:
+    app: api-gateway-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway-app
+  template:
+    metadata:
+      labels:
+        app: api-gateway-app
+    spec:
+      volumes:
+      - name: nginx-config-volume
+        configMap:
+          name: nginx-config
+      containers:
+        # Our PHP-FPM application
+        - image: 305696025533.dkr.ecr.us-east-1.amazonaws.com/gic-dx-its-mgt-backend-api-gateway:v1.0.0
+          name: api-gateway
+          env:
+          - name: DB_HOST
+            value: 127.0.0.1
+          - name: DB_USERNAME
+            value: root
+          - name: DB_PASSWORD
+            value: g1cdxbackapig@teway
+        - name: mysql
+          image: mysql:latest
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: g1cdxbackapig@teway
+          - name: MYSQL_DATABASE
+            value: api_gateway
+          - name: MYSQL_USER
+            value: apigatewayuser
+          - name: MYSQL_PASSWORD
+            value: ap1g@tewayuser
+          ports:
+          - containerPort: 3306
+        - image: nginx:latest
+          name: nginx
+          volumeMounts:
+          - name: nginx-config-volume
+            mountPath: /etc/nginx/conf.d
+
+
+

@@ -1,0 +1,145 @@
+version: '3'
+services:
+  
+  #PHP Service
+  api-gateway:
+    build: api-gateway/
+    container_name: api-gateway
+    restart: unless-stopped
+    environment:
+      EMPLOYEE_MYANMAR_SERVICE_HOST: http://webserver_employees:80
+      EMPLOYEE_JAPAN_SERVICE_HOST: http://webserver_employees-japan:80
+      CUSTOMER_JAPAN_SERVICE_HOST: http://webserver_customers-japan:80
+      MAIL_HOST: smtp.gmail.com
+      MAIL_PORT: "587"
+      MAIL_USERNAME: gictesting53@gmail.com
+      MAIL_PASSWORD: eryvmmyoccjkkyew
+      MAIL_ENCRYPTION: tls
+      MAIL_FROM_ADDRESS: gictesting53@gmail.com
+    tty: true
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  #PHP Service
+  customers-japan:
+    build: customers-japan/
+    container_name: customers-japan
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  #PHP Service
+  employees:
+    build: employees/
+    container_name: employees
+    restart: unless-stopped
+    environment:
+      EMPLOYEE_JAPAN_SERVICE_HOST: http://webserver_employees-japan:80
+    tty: true
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  #PHP Service
+  employees-japan:
+    build: employees-japan/
+    container_name: employees-japan
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  #Nginx Service for api-gateway
+  webserver_api-gateway:
+    image: nginx:alpine
+    container_name: webserver_api-gateway
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - api-gateway
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx/conf.d_api-gateway/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #Nginx Service for customers-japan
+  webserver_customers-japan:
+    image: nginx:alpine
+    container_name: webserver_customers-japan
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - customers-japan
+    ports:
+      - "8003:80"
+    volumes:
+      - ./customers-japan/:/var/www/customers-japan/
+      - ./nginx/conf.d_customers-japan/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #Nginx Service for employees
+  webserver_employees:
+    image: nginx:alpine
+    container_name: webserver_employees
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - employees
+    ports:
+      - "8001:80"
+    volumes:
+      - ./employees/:/var/www/employees/
+      - ./nginx/conf.d_employees/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+
+  #Nginx Service for employees-japan
+  webserver_employees-japan:
+    image: nginx:alpine
+    container_name: webserver_employees-japan
+    restart: unless-stopped
+    tty: true
+    depends_on:
+      - employees-japan
+    ports:
+      - "8002:80"
+    volumes:
+      - ./employees-japan/:/var/www/employees-japan/
+      - ./nginx/conf.d_employees-japan/:/etc/nginx/conf.d/
+    networks:
+      - app-network
+  #MySQL Service
+  db:
+    image: mysql:latest
+    container_name: db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: g1cP@ssw0rd
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - ./mysql/:/etc/mysql/conf.d/
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local
