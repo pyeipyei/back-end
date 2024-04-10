@@ -25,8 +25,23 @@ jobs:
       run: |
         DOCKER_TAG=$(echo "${GITHUB_REF}" | cut -d'/' -f 3)
         docker build -t gic-dx-its-mgt-front:$IMAGE_TAG .
-        docker tag gic-dx-its-mgt-front:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}:${DOCKER_TAG}
-        docker tag gic-dx-its-mgt-front:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
+        docker tag gic-dx-its-mgt-api:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}api:${DOCKER_TAG}
+        docker tag gic-dx-its-mgt-api:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}api:$IMAGE_TAG
+
+        DOCKER_TAG=$(echo "${GITHUB_REF}" | cut -d'/' -f 3)
+        docker build -t gic-dx-its-mgt-front:$IMAGE_TAG .
+        docker tag gic-dx-its-mgt-cjapan:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}cjapan:${DOCKER_TAG}
+        docker tag gic-dx-its-mgt-cjapan:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}cjapan:$IMAGE_TAG
+
+        DOCKER_TAG=$(echo "${GITHUB_REF}" | cut -d'/' -f 3)
+        docker build -t gic-dx-its-mgt-front:$IMAGE_TAG .
+        docker tag gic-dx-its-mgt-employees:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}employees:${DOCKER_TAG}
+        docker tag gic-dx-its-mgt-employees:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}employees:$IMAGE_TAG
+
+        DOCKER_TAG=$(echo "${GITHUB_REF}" | cut -d'/' -f 3)
+        docker build -t gic-dx-its-mgt-front:$IMAGE_TAG .
+        docker tag gic-dx-its-mgt-ejapan:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}ejapan:${DOCKER_TAG}
+        docker tag gic-dx-its-mgt-ejapan:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}ejapan:$IMAGE_TAG
 
     - name: Authenticate to Amazon ECR
       run: |
@@ -35,5 +50,14 @@ jobs:
     - name: Push Docker image to Amazon ECR
       run: |
         DOCKER_TAG=$(echo "${GITHUB_REF}" | cut -d'/' -f 3)
-        docker push ${{ vars.ECR_REPOSITORY }}:${DOCKER_TAG}
-        docker push ${{ vars.ECR_REPOSITORY }}:latest
+        docker push ${{ vars.ECR_REPOSITORY }}api:${DOCKER_TAG}
+        docker push ${{ vars.ECR_REPOSITORY }}api:latest
+
+        docker push ${{ vars.ECR_REPOSITORY }}cjapan:${DOCKER_TAG}
+        docker push ${{ vars.ECR_REPOSITORY }}cjapan:latest
+
+        docker push ${{ vars.ECR_REPOSITORY }}employees:${DOCKER_TAG}
+        docker push ${{ vars.ECR_REPOSITORY }}employees:latest
+
+        docker push ${{ vars.ECR_REPOSITORY }}ejapan:${DOCKER_TAG}
+        docker push ${{ vars.ECR_REPOSITORY }}ejapan:latest
