@@ -24,19 +24,19 @@ jobs:
         IMAGE_TAG: latest
       run: |
         DOCKER_TAG=$(echo "${GITHUB_REF}" | cut -d'/' -f 3)
-        docker build -t gic-dx-its-mgt-front:$IMAGE_TAG .
+        docker build -t gic-dx-its-mgt-api:$IMAGE_TAG .
         docker tag gic-dx-its-mgt-api:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}api:${DOCKER_TAG}
         docker tag gic-dx-its-mgt-api:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}api:$IMAGE_TAG
 
-        docker build -t gic-dx-its-mgt-front:$IMAGE_TAG .
+        docker build -t gic-dx-its-mgt-cjapan:$IMAGE_TAG .
         docker tag gic-dx-its-mgt-cjapan:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}cjapan:${DOCKER_TAG}
         docker tag gic-dx-its-mgt-cjapan:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}cjapan:$IMAGE_TAG
 
-        docker build -t gic-dx-its-mgt-front:$IMAGE_TAG .
+        docker build -t gic-dx-its-mgt-employees:$IMAGE_TAG .
         docker tag gic-dx-its-mgt-employees:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}employees:${DOCKER_TAG}
         docker tag gic-dx-its-mgt-employees:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}employees:$IMAGE_TAG
 
-        docker build -t gic-dx-its-mgt-front:$IMAGE_TAG .
+        docker build -t gic-dx-its-mgt-ejapan:$IMAGE_TAG .
         docker tag gic-dx-its-mgt-ejapan:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}ejapan:${DOCKER_TAG}
         docker tag gic-dx-its-mgt-ejapan:$IMAGE_TAG ${{ vars.ECR_REPOSITORY }}ejapan:$IMAGE_TAG
 
