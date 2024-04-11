@@ -78,5 +78,5 @@ jobs:
 
     - name: Deploy to Amazon EKS
       run: |
-        kubectl delete -f employees-deployment.yml --namespace ${{ vars.AWS_EKS_NAMESPACE}}
-        kubectl apply -f employees-deployment.yml --namespace ${{ vars.AWS_EKS_NAMESPACE}}
+        kubectl delete -f maifests/employees/employees-deployment.yml --namespace ${{ vars.AWS_EKS_NAMESPACE}}
+        kubectl apply -f maifests/employees/employees-deployment.yml --namespace ${{ vars.AWS_EKS_NAMESPACE}}
